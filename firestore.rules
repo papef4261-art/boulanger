@@ -1,0 +1,74 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Global default-deny safety net
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Helper functions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() > 0 && id.size() <= 128;
+    }
+
+    // User Profile
+    match /users/{userId} {
+      allow read, write: if isOwner(userId) && isValidId(userId);
+
+      // User Private Subcollections
+      match /journals/{journalId} {
+        allow read, write: if isOwner(userId) && isValidId(journalId);
+      }
+
+      match /settings/{docId} {
+        allow read, write: if isOwner(userId) && isValidId(docId);
+      }
+
+      match /bakeries/{bakeryId} {
+        allow read, write: if isOwner(userId) && isValidId(bakeryId);
+      }
+
+      match /monthly_records/{recordId} {
+        allow read, write: if isOwner(userId) && isValidId(recordId);
+      }
+    }
+
+    // Direct Collections Fallback (with user isolation)
+    match /journals/{journalId} {
+      allow get, list: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow create: if isSignedIn() && request.resource.data.userId == request.auth.uid;
+      allow update, delete: if isSignedIn() && resource.data.userId == request.auth.uid;
+    }
+
+    match /settings/{userId} {
+      allow read, write: if isOwner(userId) && isValidId(userId);
+    }
+
+    match /bakeries/{bakeryId} {
+      allow get, list: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow create: if isSignedIn() && request.resource.data.userId == request.auth.uid;
+      allow update, delete: if isSignedIn() && resource.data.userId == request.auth.uid;
+    }
+
+    // Subscriptions and payment transactions
+    match /subscriptions/{userId} {
+      allow read: if isOwner(userId);
+      // Writes are managed server-side by payment webhook / APIs
+      allow write: if isOwner(userId);
+    }
+
+    match /transactions/{transactionId} {
+      allow read: if isSignedIn() && (resource == null || resource.data.userId == request.auth.uid);
+      allow create: if isSignedIn() && request.resource.data.userId == request.auth.uid;
+    }
+  }
+}

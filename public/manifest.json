@@ -1,0 +1,29 @@
+{
+  "short_name": "JournalCaisse",
+  "name": "Journal de Caisse & Calculateur de Gains",
+  "description": "Application de gestion de caisse et calcul des bénéfices quotidiens, mensuels et annuels",
+  "icons": [
+    {
+      "src": "favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "logo.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon.jpg",
+      "sizes": "192x192",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    }
+  ],
+  "start_url": "./",
+  "display": "standalone",
+  "theme_color": "#2D5A43",
+  "background_color": "#F4F1EA"
+}

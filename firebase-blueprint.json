@@ -1,0 +1,167 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "User profile with authentication and contact details",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "description": "Firebase Auth UID" },
+        "email": { "type": "string", "description": "User email address" },
+        "displayName": { "type": "string", "description": "User display name" },
+        "photoURL": { "type": "string", "description": "User avatar URL" },
+        "provider": { "type": "string", "description": "Authentication provider identifier" },
+        "lastLoginAt": { "type": "string", "description": "ISO timestamp of last sign in" }
+      },
+      "required": ["uid"]
+    },
+    "DailyJournal": {
+      "title": "DailyJournal",
+      "description": "Daily cashier journal entry tracking bakery production, sales, returns and expenses",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique journal identifier" },
+        "date": { "type": "string", "description": "Date string in YYYY-MM-DD format" },
+        "userId": { "type": "string", "description": "Owner Firebase UID" },
+        "bakeryId": { "type": "string", "description": "Associated bakery branch identifier" },
+        "title": { "type": "string", "description": "Journal title" },
+        "productName": { "type": "string", "description": "Primary product name" },
+        "unitSellingPrice": { "type": "number", "description": "Selling price per unit" },
+        "unitReturnPrice": { "type": "number", "description": "Return price per unit" },
+        "unitCostPrice": { "type": "number", "description": "Cost price per unit" },
+        "sellers": { "type": "array", "description": "List of seller records" },
+        "expenses": { "type": "array", "description": "List of expense records" },
+        "summary": { "type": "object", "description": "Calculated financial summary" },
+        "notes": { "type": "string", "description": "Additional remarks and notes" },
+        "createdAt": { "type": "string", "description": "Creation timestamp" },
+        "updatedAt": { "type": "string", "description": "Last updated timestamp" }
+      },
+      "required": ["id", "date", "userId"]
+    },
+    "BakeryBranch": {
+      "title": "BakeryBranch",
+      "description": "Bakery branch configuration and contact information",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Branch identifier" },
+        "name": { "type": "string", "description": "Bakery branch name" },
+        "bakerName": { "type": "string", "description": "Head baker name" },
+        "phone": { "type": "string", "description": "Contact telephone number" },
+        "address": { "type": "string", "description": "Bakery physical location address" },
+        "color": { "type": "string", "description": "Badge hex color" },
+        "defaultProductName": { "type": "string", "description": "Default product name" },
+        "defaultSellingPrice": { "type": "number", "description": "Default selling price" },
+        "defaultReturnPrice": { "type": "number", "description": "Default return price" },
+        "defaultCostPrice": { "type": "number", "description": "Default cost price" },
+        "createdAt": { "type": "string", "description": "Creation timestamp" }
+      },
+      "required": ["id", "name"]
+    },
+    "AppSettings": {
+      "title": "AppSettings",
+      "description": "User configuration settings and calculation preferences",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "description": "User identifier" },
+        "businessName": { "type": "string", "description": "Business trade name" },
+        "businessType": { "type": "string", "description": "Industry type" },
+        "currency": { "type": "string", "description": "Display currency symbol" },
+        "defaultProductName": { "type": "string", "description": "Default product" },
+        "defaultSellingPrice": { "type": "number", "description": "Default unit price" },
+        "defaultReturnPrice": { "type": "number", "description": "Default return price" },
+        "defaultCostPrice": { "type": "number", "description": "Default cost price" },
+        "calculationFormula": { "type": "string", "description": "Formula model identifier" },
+        "notificationEmail": { "type": "string", "description": "Alerts destination email" },
+        "notificationPhone": { "type": "string", "description": "Alerts destination phone" }
+      }
+    },
+    "MonthlyProfitRecord": {
+      "title": "MonthlyProfitRecord",
+      "description": "Consolidated monthly profit, revenue, returns and loss archive",
+      "type": "object",
+      "properties": {
+        "monthKey": { "type": "string", "description": "Key in YYYY-MM format" },
+        "year": { "type": "number", "description": "Calendar year" },
+        "monthIndex": { "type": "number", "description": "0-indexed month number" },
+        "totalNetGain": { "type": "number", "description": "Total net profits in currency" },
+        "totalGrossRevenue": { "type": "number", "description": "Total gross revenue" },
+        "totalSoldUnits": { "type": "number", "description": "Total quantity sold" },
+        "totalReturnUnits": { "type": "number", "description": "Total quantity returned" },
+        "totalLostUnits": { "type": "number", "description": "Total quantity lost" },
+        "totalExpenses": { "type": "number", "description": "Total expenses deducted" },
+        "daysCount": { "type": "number", "description": "Number of days with journal records" }
+      },
+      "required": ["monthKey", "year", "monthIndex"]
+    },
+    "PaymentSubscription": {
+      "title": "PaymentSubscription",
+      "description": "User subscription plan and licensing status",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "description": "User ID" },
+        "status": { "type": "string", "enum": ["trial", "active", "expired"] },
+        "plan": { "type": "string", "enum": ["premium_monthly", "trial"] },
+        "amount": { "type": "number", "description": "Subscription price in currency" },
+        "currency": { "type": "string", "description": "Currency code (XOF, CFA)" },
+        "startDate": { "type": "string", "description": "Plan start ISO date" },
+        "endDate": { "type": "string", "description": "Plan end ISO date" },
+        "paymentMethod": { "type": "string", "description": "Payment provider (wave, orange_money)" },
+        "lastTransactionId": { "type": "string", "description": "Reference of last processed transaction" }
+      },
+      "required": ["userId", "status", "plan"]
+    },
+    "PaymentTransaction": {
+      "title": "PaymentTransaction",
+      "description": "Payment transaction history record for mobile money providers",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Transaction identifier" },
+        "userId": { "type": "string", "description": "User identifier" },
+        "amount": { "type": "number", "description": "Transaction amount in XOF" },
+        "currency": { "type": "string", "description": "Currency code" },
+        "paymentMethod": { "type": "string", "enum": ["wave", "orange_money"] },
+        "status": { "type": "string", "enum": ["pending", "completed", "failed", "cancelled"] },
+        "isCredited": { "type": "boolean", "description": "Whether subscription credit was applied" },
+        "createdAt": { "type": "string", "description": "Initiation timestamp" }
+      },
+      "required": ["id", "userId", "amount", "status"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "UserProfile",
+      "description": "Private user account profile and metadata"
+    },
+    "/users/{userId}/journals/{journalId}": {
+      "schema": "DailyJournal",
+      "description": "Subcollection of daily cashier journals owned by the user"
+    },
+    "/users/{userId}/settings/{docId}": {
+      "schema": "AppSettings",
+      "description": "Subcollection of user preferences and store settings"
+    },
+    "/users/{userId}/bakeries/{bakeryId}": {
+      "schema": "BakeryBranch",
+      "description": "Subcollection of bakery branches registered by the user"
+    },
+    "/users/{userId}/monthly_records/{recordId}": {
+      "schema": "MonthlyProfitRecord",
+      "description": "Subcollection of consolidated monthly performance records"
+    },
+    "/journals/{journalId}": {
+      "schema": "DailyJournal",
+      "description": "Direct collection fallback for cashier journals with user isolation"
+    },
+    "/settings/{userId}": {
+      "schema": "AppSettings",
+      "description": "Direct collection fallback for user store settings"
+    },
+    "/subscriptions/{userId}": {
+      "schema": "PaymentSubscription",
+      "description": "User subscription and licensing status"
+    },
+    "/transactions/{transactionId}": {
+      "schema": "PaymentTransaction",
+      "description": "Payment transaction audit trail"
+    }
+  }
+}
